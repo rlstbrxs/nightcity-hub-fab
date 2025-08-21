@@ -35,7 +35,7 @@ local items = {
     {guiName = "Mutation Charm", remoteName = "MutationCharm"},
     {guiName = "Weight Charm", remoteName = "WeightCharm"},
     {guiName = "Mutation Stabilizer", remoteName = "MutationStabilizer"},
-    {guiName = "Evolution Crystal", remoteName = "EvolutionCrystal"},
+    {guiName = "Evolution Crystal", remoteName = "EvolveCrystal"},
     {guiName = "Overfeed Charm", remoteName = "OverfeedCharm"},
     {guiName = "Keeper's Seal", remoteName = "KeepersSeal"}
 }
@@ -50,7 +50,7 @@ local Window = Rayfield:CreateWindow({
     LoadingSubtitle = "by nightcityyy",
     ConfigurationSaving = {
         Enabled = true,
-        FolderName = "FishingHub",
+        FolderName = "FabScript",
         FileName = "Config"
     }
 })
