@@ -55,10 +55,8 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
--- SHOP TAB
 local ShopTab = Window:CreateTab("Shop", 4483362458)
 
--- Auto Buy Baits
 local BaitsSection = ShopTab:CreateSection("Auto Buy Baits")
 local BaitsDropdown = ShopTab:CreateDropdown({
     Name = "Select Baits",
@@ -77,7 +75,6 @@ for _, bait in ipairs(baits) do
 end
 BaitsDropdown:Refresh(BaitsDropdown.Options, true)
 
--- Auto Buy Items
 local ItemsSection = ShopTab:CreateSection("Auto Buy Items")
 local ItemsDropdown = ShopTab:CreateDropdown({
     Name = "Select Items",
@@ -96,7 +93,6 @@ for _, item in ipairs(items) do
 end
 ItemsDropdown:Refresh(ItemsDropdown.Options, true)
 
--- FISHING TAB
 local FishingTab = Window:CreateTab("Fishing", 6022668961)
 
 local FishingSection = FishingTab:CreateSection("Fishing")
@@ -108,7 +104,6 @@ FishingTab:CreateToggle({
     end
 })
 
--- MISC TAB
 local MiscTab = Window:CreateTab("Misc", 6022668961)
 
 local MiscSection = MiscTab:CreateSection("Miscellaneous")
@@ -126,7 +121,6 @@ MiscTab:CreateSlider({
     end
 })
 
--- AUTO BUY LOOP (optimisé rapide)
 task.spawn(function()
     while task.wait(0.1) do
         for _, bait in ipairs(baits) do
@@ -150,7 +144,6 @@ task.spawn(function()
     end
 end)
 
--- FAST FISHING LOOP
 game:GetService("RunService").RenderStepped:Connect(function()
     if fastFishingEnabled then
         local gui = player:FindFirstChild("PlayerGui")
