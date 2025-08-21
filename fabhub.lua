@@ -55,7 +55,7 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local ShopTab = Window:CreateTab("Shop", 4483362458)
+local ShopTab = Window:CreateTab("Shop", "shopping-cart")
 
 local BaitsSection = ShopTab:CreateSection("Auto Buy Baits")
 local BaitsDropdown = ShopTab:CreateDropdown({
@@ -93,7 +93,7 @@ for _, item in ipairs(items) do
 end
 ItemsDropdown:Refresh(ItemsDropdown.Options, true)
 
-local FishingTab = Window:CreateTab("Fishing", 6022668961)
+local FishingTab = Window:CreateTab("Fishing", "fish")
 
 local FishingSection = FishingTab:CreateSection("Fishing")
 FishingTab:CreateToggle({
@@ -104,7 +104,7 @@ FishingTab:CreateToggle({
     end
 })
 
-local MiscTab = Window:CreateTab("Misc", 6022668961)
+local MiscTab = Window:CreateTab("Misc", "settings")
 
 local MiscSection = MiscTab:CreateSection("Miscellaneous")
 MiscTab:CreateSlider({
