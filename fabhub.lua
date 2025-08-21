@@ -10,6 +10,9 @@ local PurchaseBait = BaitService.RF:WaitForChild("PurchaseBait")
 local SuppliesService = Knit.Services:WaitForChild("SuppliesService")
 local PurchaseItem = SuppliesService.RF:WaitForChild("PurchaseItem")
 
+local MoneyService = Knit.Services:WaitForChild("MoneyCollectionService")
+local CollectMoney = MoneyService.RF:WaitForChild("CollectMoney")
+
 local player = game.Players.LocalPlayer
 
 local baits = {
@@ -43,6 +46,8 @@ local items = {
 local autoBuyBaits = {}
 local autoBuyItems = {}
 local fastFishingEnabled = false
+local autoCollectMoney = false
+local collectInterval = 1
 
 local Window = Rayfield:CreateWindow({
     Name = "nightcity's hub",
@@ -56,7 +61,6 @@ local Window = Rayfield:CreateWindow({
 })
 
 local ShopTab = Window:CreateTab("Shop", "shopping-cart")
-
 local BaitsSection = ShopTab:CreateSection("Auto Buy Baits")
 local BaitsDropdown = ShopTab:CreateDropdown({
     Name = "Select Baits",
@@ -94,7 +98,6 @@ end
 ItemsDropdown:Refresh(ItemsDropdown.Options, true)
 
 local FishingTab = Window:CreateTab("Fishing", "fish")
-
 local FishingSection = FishingTab:CreateSection("Fishing")
 FishingTab:CreateToggle({
     Name = "Fast Fishing",
@@ -105,7 +108,6 @@ FishingTab:CreateToggle({
 })
 
 local MiscTab = Window:CreateTab("Misc", "settings")
-
 local MiscSection = MiscTab:CreateSection("Miscellaneous")
 MiscTab:CreateSlider({
     Name = "WalkSpeed",
@@ -118,6 +120,27 @@ MiscTab:CreateSlider({
         if player and player.Character and player.Character:FindFirstChild("Humanoid") then
             player.Character.Humanoid.WalkSpeed = value
         end
+    end
+})
+
+local CollectTab = Window:CreateTab("Collect", "currency")
+local CollectSection = CollectTab:CreateSection("Collect Money")
+CollectTab:CreateToggle({
+    Name = "Auto Collect Money",
+    CurrentValue = false,
+    Callback = function(value)
+        autoCollectMoney = value
+    end
+})
+CollectTab:CreateSlider({
+    Name = "Collect Interval (sec)",
+    Range = {1, 60},
+    Increment = 1,
+    Suffix = "sec",
+    CurrentValue = 1,
+    Flag = "CollectIntervalSlider",
+    Callback = function(value)
+        collectInterval = value
     end
 })
 
@@ -140,6 +163,26 @@ task.spawn(function()
                     end)
                 end)
             end
+        end
+    end
+end)
+
+task.spawn(function()
+    local timer = 0
+    while true do
+        task.wait(0.1)
+        if autoCollectMoney then
+            timer = timer + 0.1
+            if timer >= collectInterval then
+                for i = 1, 11 do
+                    pcall(function()
+                        CollectMoney:InvokeServer("PlaceableArea_"..i)
+                    end)
+                end
+                timer = 0
+            end
+        else
+            timer = 0
         end
     end
 end)
