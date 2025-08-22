@@ -13,6 +13,9 @@ local PurchaseItem = SuppliesService.RF:WaitForChild("PurchaseItem")
 local MoneyService = Knit.Services:WaitForChild("MoneyCollectionService")
 local CollectMoney = MoneyService.RF:WaitForChild("CollectMoney")
 
+local ConsumableService = Knit.Services:WaitForChild("ConsumableService")
+local UseItem = ConsumableService.RE:WaitForChild("UseItem")
+
 local player = game.Players.LocalPlayer
 
 local baits = {
@@ -48,6 +51,7 @@ local autoBuyItems = {}
 local fastFishingEnabled = false
 local autoCollectMoney = false
 local collectInterval = 1
+local autoUseItems = {}
 
 local Window = Rayfield:CreateWindow({
     Name = "nightcity's hub",
@@ -107,6 +111,26 @@ FishingTab:CreateToggle({
     end
 })
 
+local AutoUseSection = FishingTab:CreateSection("Auto Use Items")
+local AutoUseDropdown = FishingTab:CreateDropdown({
+    Name = "Select Items to use (2 max)",
+    Options = {"Rusty Weight Charm", "Rusty Mutation Charm", "Mutation Charm", "Weight Charm"},
+    MultipleOptions = true,
+    CurrentOption = {},
+    Callback = function(selected)
+        autoUseItems = {}
+        for _, item in ipairs(items) do
+            if table.find(selected, item.guiName) then
+                autoUseItems[item.remoteName] = true
+            end
+        end
+        if #selected > 2 then
+            table.remove(selected, 3)
+            AutoUseDropdown:Set(selected)
+        end
+    end
+})
+
 local MiscTab = Window:CreateTab("Misc", "settings")
 local MiscSection = MiscTab:CreateSection("Miscellaneous")
 MiscTab:CreateSlider({
@@ -161,6 +185,19 @@ task.spawn(function()
                     pcall(function()
                         PurchaseItem:InvokeServer(item.remoteName)
                     end)
+                end)
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while task.wait(1) do
+        for remoteName, enabled in pairs(autoUseItems) do
+            if enabled then
+                local args = {remoteName}
+                pcall(function()
+                    UseItem:FireServer(unpack(args))
                 end)
             end
         end
