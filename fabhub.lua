@@ -135,7 +135,7 @@ local MiscTab = Window:CreateTab("Misc", "settings")
 local MiscSection = MiscTab:CreateSection("Miscellaneous")
 MiscTab:CreateSlider({
     Name = "WalkSpeed",
-    Range = {0, 100},
+    Range = {16, 100},
     Increment = 1,
     Suffix = "Speed",
     CurrentValue = 16,
@@ -165,6 +165,29 @@ CollectTab:CreateSlider({
     Flag = "CollectIntervalSlider",
     Callback = function(value)
         collectInterval = value
+    end
+})
+
+local StealTab = Window:CreateTab("Stealing", "dollar-sign")
+local StealSection = StealTab:CreateSection("Stealing Options")
+StealTab:CreateToggle({
+    Name = "Steal from anywhere",
+    CurrentValue = false,
+    Callback = function(value)
+        local function applySteal(prompt)
+            if prompt:IsA("ProximityPrompt") and prompt.ActionText == "Steal" then
+                prompt.MaxActivationDistance = value and 500
+                prompt.RequiresLineOfSight = not value
+            end
+        end
+
+        for _, prompt in ipairs(game:GetDescendants()) do
+            applySteal(prompt)
+        end
+
+        game:GetService("RunService").DescendantAdded:Connect(function(desc)
+            applySteal(desc)
+        end)
     end
 })
 
